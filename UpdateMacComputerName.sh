@@ -75,6 +75,10 @@ setComputerName() {
   dscacheutil -flushcache
 }
 
+#
+### Begin Here
+#
+
 getCurrentUser
 getComputerType
 createComputerName
