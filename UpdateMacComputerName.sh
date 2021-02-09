@@ -4,7 +4,7 @@
 # Created 2020/10/20
 
 getCurrentUser() {
-currentUser=$(id -P $(stat -f%Su /dev/console) | awk -F '[:]' '{print $8}')
+currentUser=$(id -P "$(stat -f%Su /dev/console)" | awk -F '[:]' '{print $8}')
 # -F hasn't been tested on Sierra and older
 echo "Logged in user is: $currentUser"
 if [[ -z $currentUser ]]; then
@@ -48,19 +48,20 @@ getComputerType() {
 trimUsername() {
   trimLength=$(( ${#computerName} - 63 ))
   if [[ $trimLength -gt 0 ]]; then
-    userStringLength=$(( ${#currentUser} - $trimLength))
+    userStringLength=$(( ${#currentUser} - trimLength))
     # Gets the length of name allowed with given model info
-    currentUser=$(echo $currentUser \
+    currentUser=$(echo "$currentUser" \
       | cut -c -$userStringLength)
     # echo $currentUser
     createComputerName
   fi
 }
 
-createComputerName()
+createComputerName() {
   # Combine into the user-readable string
   computerName="$currentUser's $computerType ($modelInfo)"
-  local alphanumModelInfo=$(echo ${modelInfo//,/})
+  local alphanumModelInfo
+  alphanumModelInfo=$(echo ${modelInfo//,/})
   # Debug
   # echo "${#computerName} characters - $computerName"
   # Combine into the network-readable string
